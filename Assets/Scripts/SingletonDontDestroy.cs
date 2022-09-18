@@ -34,8 +34,15 @@ public abstract class SingletonDontDestroy<T> : MonoBehaviour where T : MonoBeha
             instance = this as T;
             DontDestroyOnLoad(gameObject);
             OnReset();
+            OnCreate();
         }
     }
 
-    public abstract void OnReset();
+    public virtual void OnReset()
+    {
+    }
+
+    public virtual void OnCreate()
+    {
+    }
 }

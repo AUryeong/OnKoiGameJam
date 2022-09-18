@@ -35,5 +35,7 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         }
     }
 
-    public abstract void OnReset();
+    public virtual void OnReset()
+    {
+    }
 }
