@@ -7,8 +7,9 @@ using System.Xml.Linq;
 using System;
 using UnityEngine.Events;
 using TMPro;
+using UnityEngine.SceneManagement;
 
-public class CartoonManager : SingletonDontDestroy<CartoonManager>
+public class CartoonManager : Singleton<CartoonManager>
 {
     [SerializeField] protected Canvas canvas;
     [SerializeField] protected RectTransform cutSceneParent;
@@ -24,9 +25,10 @@ public class CartoonManager : SingletonDontDestroy<CartoonManager>
 
     protected float waitTime = 0;
 
-    public override void OnCreate()
+    public override void OnReset()
     {
-        DontDestroyOnLoad(canvas);
+        base.OnReset();
+        Cursor.visible = false;
 
         foreach (RectTransform rectTransform in cutSceneParent)
             cutScenes.Add(rectTransform.GetComponent<CutScene>());
@@ -45,7 +47,7 @@ public class CartoonManager : SingletonDontDestroy<CartoonManager>
                     cutScene.cartoons[i].text = rectTransform.GetComponent<TextMeshProUGUI>();
             }
 
-        CartoonPlay(0, () => CartoonPlay(1, null));
+        CartoonPlay(0, () => CartoonPlay(1, () => CartoonPlay(2, () => CartoonPlay(3, () => SceneManager.LoadScene("Title")))));
     }
 
     protected void Update()
@@ -127,7 +129,7 @@ public class CartoonManager : SingletonDontDestroy<CartoonManager>
                     rect.DOScale(1, effect.duration).SetEase(Ease.OutBack);
                     break;
                 case EffectType.Fade_In:
-                    if(cartoon.image == null)
+                    if (cartoon.image == null)
                     {
                         cartoon.text.color = new Color(cartoon.text.color.r, cartoon.text.color.g, cartoon.text.color.b, effect.power);
                         cartoon.text.DOFade(1, effect.duration);
